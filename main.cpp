@@ -36,6 +36,12 @@ void gen(T &v, size_t size)
     }
 }
 
+template <class T>
+void print(const T &v)
+{
+    copy(v.begin(), v.end(),ostream_iterator<int>(cout, " "));
+}
+
 int main ()
 {
     setlocale(0, "");
@@ -51,7 +57,7 @@ int main ()
     sort(vec.begin(), vec.end());
 
 
-    copy(vec.begin(), vec.end(), out);
+    print(vec);
     cout << endl;
 
 //----------------------------------------------------------------
