@@ -25,7 +25,16 @@
 
 using namespace std;
 
-
+template <class T>
+void gen(T &v, size_t size)
+{
+    int r = 0;
+    while (size) {
+        r = rand()%10;
+       v.push_back(r);
+       --size;
+    }
+}
 
 int main ()
 {
@@ -36,8 +45,14 @@ int main ()
     clock_t start = clock();
 //----------------------------------------------------------------
 
+    vector<int> vec;
+    gen(vec, 10);
+
+    sort(vec.begin(), vec.end());
 
 
+    copy(vec.begin(), vec.end(), out);
+    cout << endl;
 
 //----------------------------------------------------------------
     clock_t finish = clock();
