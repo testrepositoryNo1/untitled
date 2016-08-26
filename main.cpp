@@ -26,11 +26,12 @@
 using namespace std;
 
 template <class T>
-void gen(T &v, size_t size)
+void gen(T &v)
 {
     int r = 0;
+    size_t size = 10;
     while (size) {
-        r = rand()%10;
+        r = rand()%1000;
        v.push_back(r);
        --size;
     }
@@ -39,7 +40,10 @@ void gen(T &v, size_t size)
 template <class T>
 void print(const T &v)
 {
-    copy(v.begin(), v.end(),ostream_iterator<int>(cout, " "));
+    auto it = v.begin();
+
+    for (; it != v.end(); ++it)
+        cout << *it << " - " << &(*it) << endl;
 }
 
 int main ()
@@ -52,13 +56,18 @@ int main ()
 //----------------------------------------------------------------
 
     vector<int> vec;
-    gen(vec, 10);
+    gen(vec);
 
-    sort(vec.begin(), vec.end());
-
-
+    auto x = max_element(vec.begin(), vec.end());
     print(vec);
-    cout << endl;
+    cout << "max: " << *x << " - " << &(*x) <<endl;
+
+    sort(vec.begin(), vec.end()); /* порядок элементов меняется в ходе сортировки но адреса нет,
+                                    и адрес который получила переменная x указывает на другой элемент (со списком такого не возникает)*/
+
+    x = max_element(vec.begin(), vec.end()); /* для коректного отображения максимального элемента */
+    print(vec);
+    cout << "max: " << *x << " - " << &(*x) << endl;
 
 //----------------------------------------------------------------
     clock_t finish = clock();
