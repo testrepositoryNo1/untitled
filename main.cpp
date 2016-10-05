@@ -1,4 +1,3 @@
-
 #include "stdfx.h"
 using namespace std;
 
@@ -39,6 +38,15 @@ void print(const T &v)
     cout << endl;
 }
 
+
+int x()
+{
+  default_random_engine dre(clock());
+  uniform_int_distribution<int> di;
+  return di(dre);
+}
+
+
 int main ()
 {
     setlocale(0, "");
@@ -49,6 +57,13 @@ int main ()
 //----------------------------------------------------------------
 
 
+    default_random_engine dre((clock() + rand()) / (rand() % 1000) );
+    uniform_int_distribution<int> di(0, 100);
+
+    for(size_t i = 0; i < 10; ++i ) {
+      cout << di(dre) << endl;
+
+      }
 
 //---------------------------------------------------------------
     clock_t finish = clock();
