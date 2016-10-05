@@ -2,26 +2,30 @@
 #define MAIN_H
 #include "stdfx.h"
 
-template<class T>
-void dre_gen(T &v, size_t _size, int _from, int _to)
+class my_boost_int_Rnd
 {
-    int seed = clock() * clock() / 3 ;
-    default_random_engine dre(seed);
-    uniform_int_distribution<int> di(_from, _to);
-    for (size_t i = 0; i < _size; ++i)
-      v.push_back(di(dre));
+public:
 
-    for (auto a: v)
-      cout << a << endl;
-}
+  int boost_rnd()
+  {
+    boost::random::mt19937 temp_gen(clock());       /* seed is clock*/
+    boost::random::uniform_int_distribution<>temp_di;
+    boost::random::mt19937 gen(temp_di(temp_gen));
+    boost::random::uniform_int_distribution<> dist;
+    return dist(gen);
+  }
 
-template <class T>
-void print(const T &v)
-{
-    for (auto a: v)
-      cout << a << " ";
-    cout << endl;
-}
+
+  int boost_rnd(int a, int b)
+  {
+    boost::random::mt19937 temp_gen(clock());       /* seed is clock*/
+    boost::random::uniform_int_distribution<>temp_di;
+    boost::random::mt19937 gen(temp_di(temp_gen));
+    boost::random::uniform_int_distribution<> dist(a, b);
+    return dist(gen);
+  }
+
+};
 
 
 

@@ -1,34 +1,5 @@
-#include "stdfx.h"
+#include "main.h"
 using namespace std;
-
-template <class T>
-void gen(T &v, size_t size, unsigned int modulo)
-{
-  if (modulo > 1) {
-  int r = 0;
-    while (size) {
-        r = rand() % modulo;
-       v.push_back(r);
-       --size;
-    }
-    }
-  else {
-      cout << "modulo must be more or equal 2" << endl;
-      exit(0);
-    }
-}
-
-template <class T>
-void gen_(T &v, size_t size, int from)
-{
-    while (size) {
-        v.push_back(from);
-        ++from;
-        --size;
-      }
-}
-
-
 
 template <class T>
 void print(const T &v)
@@ -36,14 +7,6 @@ void print(const T &v)
     for (auto a: v)
       cout << a << " ";
     cout << endl;
-}
-
-
-int x()
-{
-  default_random_engine dre(clock());
-  uniform_int_distribution<int> di;
-  return di(dre);
 }
 
 
@@ -56,14 +19,15 @@ int main ()
     clock_t start = clock();
 //----------------------------------------------------------------
 
+    vector<int> vec;
+    my_boost_int_Rnd object;
 
-    default_random_engine dre((clock() + rand()) / (rand() % 1000) );
-    uniform_int_distribution<int> di(0, 100);
+    for (size_t i = 0; i < 10; ++i)
+      vec.push_back(object.boost_rnd(-1789, 1));
 
-    for(size_t i = 0; i < 10; ++i ) {
-      cout << di(dre) << endl;
 
-      }
+    for(auto a: vec)
+      cout << a<< endl;
 
 //---------------------------------------------------------------
     clock_t finish = clock();
