@@ -1,31 +1,5 @@
-#include <iostream>
-#include <iomanip>
-#include <stdio.h>
 
-//#include <ctime>
-//#include <time.h>
-#include <chrono>
-
-#include <vector>
-#include <algorithm>
-#include <iterator>
-#include <functional>
-#include <string>
-#include <utility>
-//#include <deque>
-//#include <list>
-//#include <set>
-#include <stack>
-#include <queue>
-
-#include <memory>
-#include <cassert>
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <cstring>
-#include <string.h>
-
+#include "stdfx.h"
 using namespace std;
 
 template <class T>
@@ -74,28 +48,6 @@ int main ()
     clock_t start = clock();
 //----------------------------------------------------------------
 
-    size_t count = 0;
-    string str, rand_word = "test" ;
-    size_t x = 0;
-    int r = 0;
-
-
-    while (str != rand_word) {
-            str = "";
-            x = rand()%10;
-            if (x == rand_word.size()) {
-            while (x){
-                r  = rand() %255;
-                if ( (r >= 65 && r <= 90) || (r >= 97 && r <= 122)  || r == 32 ){
-                    str.push_back(char(r));
-                    --x;
-                  }
-              }
-          }
-            ++count;
-      }
-
-    cout << str << " - " << count << endl;
 
 
 //---------------------------------------------------------------

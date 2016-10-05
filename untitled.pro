@@ -7,4 +7,6 @@ CONFIG += c++14
 SOURCES += main.cpp
 QMAKE_CXXFLAGS += -std=c++11
 
-HEADERS +=
+HEADERS += \
+    stdfx.h \
+    main.h
