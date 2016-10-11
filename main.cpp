@@ -1,4 +1,5 @@
 #include "main.h"
+
 using namespace std;
 
 template <class T>
@@ -16,23 +17,47 @@ int main ()
     srand(time(0));
     srand(rand());
     ostream_iterator<int> out(cout, "\n");
-    clock_t start = clock();
+    boost::chrono::microseconds start(clock());
 //----------------------------------------------------------------
 
+/*
     vector<int> vec;
-    my_boost_int_Rnd object;
+    for (int i = 0; i < 1000; ++i )
+        vec.push_back(i);
 
-    for (size_t i = 0; i < 10; ++i)
-      vec.push_back(object.boost_rnd(-1789, 1));
+    my_boost_int_Rnd rnd;
+*/
+    shared_ptr<string> s1Ptr(new string ("test"));
+    shared_ptr<string> s2Ptr(new string("this"));
+
+    (*s1Ptr)[0] = 'T';
+    s2Ptr->replace(0, 1, "T");
+
+    vector<shared_ptr<string>> spvec;
+
+    spvec.push_back(s1Ptr);
+    spvec.push_back(s2Ptr);
+    spvec.push_back(s1Ptr);
+    spvec.push_back(s2Ptr);
+    spvec.push_back(s1Ptr);
+    spvec.push_back(s2Ptr);
+
+    for (auto ptr: spvec)
+        cout << *ptr << endl;
+
+    *s1Ptr = "understand";
+
+    for (auto ptr: spvec)
+        cout << *ptr << endl;
 
 
-    for(auto a: vec)
-      cout << a<< endl;
 
 //---------------------------------------------------------------
-    clock_t finish = clock();
-    double result = (finish - start) * 1.0 / CLOCKS_PER_SEC;
-    cout << fixed << result << endl;
+    boost::chrono::microseconds end(clock());
+    using ms = boost::chrono::microseconds;
+    ms d = boost::chrono::duration_cast<ms>(end - start);
+    double dd = d.count();
+    cout << dd / 1000.0 << " sec. = " << end - start << endl;
     return 0;
 }
 

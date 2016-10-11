@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <iomanip>
-#include <chrono>
+//#include <chrono>
 
 #include <vector>
-//#include <deque>
+#include <deque>
 #include <algorithm>
 #include <iterator>
 #include <functional>
@@ -25,8 +25,9 @@
 //#include <cstring>
 //#include <string.h>
 
+#include <boost/type_index.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
-
+#include <boost/chrono.hpp>
 
 #endif // STDFX_H
