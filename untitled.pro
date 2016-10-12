@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += c++14
 
-LIBS += -L/path/boost/lib/ -lboost_thread -lboost_system
+LIBS += -L/path/boost/lib/ -lboost_thread -lboost_system -lboost_chrono
 
 SOURCES += main.cpp
 QMAKE_CXXFLAGS += -std=c++11

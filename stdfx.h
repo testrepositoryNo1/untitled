@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 //#include <chrono>
 
 #include <vector>
@@ -25,7 +26,7 @@
 //#include <cstring>
 //#include <string.h>
 
-#include <boost/type_index.hpp>
+//#include <boost/type_index.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
