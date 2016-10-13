@@ -10,6 +10,7 @@ void print(const T &v)
 }
 
 
+
 int main ()
 {
     setlocale(0, "");
@@ -18,31 +19,43 @@ int main ()
     ostream_iterator<int> out(cout, "\n");
     boost::chrono::milliseconds start(clock());
 //----------------------------------------------------------------
+    my_boost_int_Rnd rnd;
+    vector<int> vec;
+    for(size_t i = 0; i < 10; ++i)
+      vec.push_back(rnd.int_boost_rnd(0,100));
 
+    for (auto a: vec)
+      cout << a << endl;
+
+    auto iter = find_if(vec.begin(), vec.end(),
+                        [](int var) {  return var==50; });
+
+    if(iter != vec.end())
+      cout << "---------------\n" << distance(vec.begin(), iter) << endl;
+    else
+      cout<< "no matches for " << 50 << endl;
+
+
+
+
+
+
+/*
+    list<int> lst;
     vector<int*> pvec;
-    vector<int*> pvec1;
 
-    shared_ptr<int> p(new int[10], default_delete<int>());
+    for (int i = 0; i < 20; ++i)
+      lst.push_back(i);
 
-    auto ptr = p.get();
-
-    for (int i = 0; i < 10; ++i) {
-        *ptr = i;
-        ++ptr;
-        }
-
-    ptr = p.get();
-
-    for (int j = 0; j < 10; ++j, ++ptr) {
-        pvec.push_back(ptr);
+    auto it = lst.begin();
+    for (; it != lst.end(); ++it ) {
+        pvec.push_back(&(*it));
        }
 
 
-    *(p.get() + 3) = 48;
-
     print(pvec);
 
-
+*/
 //---------------------------------------------------------------
     boost::chrono::milliseconds end(clock());
     using ms = boost::chrono::milliseconds;

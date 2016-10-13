@@ -13,7 +13,7 @@
 #include <functional>
 #include <string>
 #include <utility>
-//#include <list>
+#include <list>
 //#include <set>
 //#include <stack>
 //#include <queue>
@@ -26,7 +26,7 @@
 //#include <cstring>
 //#include <string.h>
 
-//#include <boost/type_index.hpp>
+#include <boost/type_index.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
