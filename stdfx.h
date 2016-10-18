@@ -30,5 +30,6 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
+#include <boost/circular_buffer.hpp>
 
 #endif // STDFX_H

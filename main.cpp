@@ -9,7 +9,13 @@ void print(const T &v)
       cout << a << endl;
 }
 
+int func()
+{
+  return 987;
+}
 
+
+int run(int arg);
 
 int main ()
 {
@@ -20,22 +26,43 @@ int main ()
     boost::chrono::milliseconds start(clock());
 //----------------------------------------------------------------
 
-    int x = 98;
-    vector<int> vec(10,77);
-    my_boost_int_Rnd rnd;
+    boost::circular_buffer<int> cbuf{3};
 
-    generate(vec.begin(), vec.end(), [&vec, &rnd](){
-        return rnd.int_boost_rnd(0, 100);
-      });
+    cbuf.push_back(1);
+    cbuf.push_back(2);
+    cbuf.push_back(3);
+
+    auto it = cbuf.begin();
+
+    for (; it != cbuf.end(); ++it)
+      cout << *it << " - " << &(*it) << endl;
+
+    cbuf.push_back(4);
+
+    cout << " ----- " << endl;
+
+    it = cbuf.begin(); /* statart all over for iterator */
+
+    for (; it != cbuf.end(); ++it)
+      cout << *it << " - " << &(*it) << endl;
+
+    cbuf.push_back(5);
+
+    cout << " ----- " << endl;
+
+    it = cbuf.begin(); /* statart all over for iterator */
+
+    for (; it != cbuf.end(); ++it)
+      cout << *it << " - " << &(*it) << endl;
 
 
-    print(vec);
+
 
 //---------------------------------------------------------------
     boost::chrono::milliseconds end(clock());
     using ms = boost::chrono::milliseconds;
-    ms d = boost::chrono::duration_cast<ms>(end - start);
-    double dd = d.count();
+    ms dur = boost::chrono::duration_cast<ms>(end - start);
+    double dd = dur.count();
     cout << dd / 1000.0 << " sec. = " << end - start << endl;
     return 0;
 }
