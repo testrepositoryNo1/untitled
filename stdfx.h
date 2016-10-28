@@ -20,16 +20,25 @@
 
 #include <memory>
 #include <cassert>
+#include <alloca.h>
 
 //#include <stdlib.h>
 //#include <stdio.h>
 //#include <cstring>
 //#include <string.h>
 
+/*---boost---*/
 #include <boost/type_index.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
-#include <boost/circular_buffer.hpp>
+//#include <boost/circular_buffer.hpp>
+
+
+/*---crypto---*/
+#include <cryptopp/rsa.h>
+#include <cryptopp/pubkey.h>
+#include <cryptopp/cryptlib.h>
+#include <cryptopp/osrng.h>
 
 #endif // STDFX_H
