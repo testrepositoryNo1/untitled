@@ -14,7 +14,7 @@
 #include <string>
 #include <utility>
 #include <list>
-//#include <set>
+#include <set>
 //#include <stack>
 //#include <queue>
 
@@ -33,12 +33,17 @@
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
 //#include <boost/circular_buffer.hpp>
-
+#include <boost/variant.hpp>
 
 /*---crypto---*/
+/*
 #include <cryptopp/rsa.h>
 #include <cryptopp/pubkey.h>
 #include <cryptopp/cryptlib.h>
 #include <cryptopp/osrng.h>
 
+#include <cryptopp/modes.h>
+#include <cryptopp/aes.h>
+#include <cryptopp/filters.h>
+*/
 #endif // STDFX_H
