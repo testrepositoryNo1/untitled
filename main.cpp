@@ -203,25 +203,66 @@ void sort_the_file(string _name)
 
 void _union()
 {
-  ofstream fout("union.txt");
-  ifstream fin;
+    ofstream fout("union.txt");
+    ifstream fin;
 
-  char ch = 'a';
-  string str = "", temp = "";
-  str += ch;
+    char ch = 'a';
+    string str = "", temp = "";
+    str += ch;
 
-  for(size_t i = 0; i <= 25; ++i) {
-     fin.open(str);
-      while (fin) {
-       fin >> temp;
-       fout << temp << endl;
-       temp.clear();
-       }
-      fin.close();
-      ++ch;
-      str = ch;
-    }
-  fout.close();
+    for(size_t i = 0; i <= 25; ++i) {
+        fin.open(str);
+        while (fin) {
+            fin >> temp;
+
+            fout << temp << endl;
+            temp.clear();
+          }
+        fin.close();
+        ++ch;
+        str = ch;
+      }
+    fout.close();
+}
+
+void generate_the_file()
+{
+    size_t c = 1000000;
+    size_t r = 0;
+    string str = "";
+    my_boost_int_Rnd rnd;
+
+    ofstream fout;
+
+    bool b = boost::filesystem::exists("text.txt");
+    if (b) {
+      auto size = boost::filesystem::file_size("text.txt");
+      double size_mb = size / 1000000.0;
+      cout << "file is exist, file_size = " << size_mb << " mb" << endl;
+      }
+    else {
+      cout << "file is not exist, and will generate now" << endl;
+      fout.open("text.txt", ios::app);
+
+      int x = 0;
+      cout << "generate progress: %\n";
+    while (c) {
+        r = rnd.int_boost_rnd(3, 8);
+        for (size_t i = 0; i < r; ++i) {
+            str += static_cast<char>(rnd.int_boost_rnd(97, 122));
+          }
+        fout << str << " ";
+        str.clear();
+        --c;
+        x = 100 - (c * 100 / 1000000.0);
+        cout << x << static_cast<char>(13);
+      }
+
+    auto size = boost::filesystem::file_size("text.txt");
+    double size_mb = size / 1000000.0;
+    cout << "\rgenerated file size is: " << size_mb << " mb" << endl;
+    fout.close();
+  }
 }
 
 int main ()
@@ -233,30 +274,9 @@ int main ()
     boost::chrono::milliseconds start(clock());
 //----------------------------------------------------------------
 
-    /*
-       size_t c = 100000
-        ;
-    size_t r = 0;
-    string str = "";
-
-    my_boost_int_Rnd rnd;
-
-    ofstream fout;
-    fout.open("text.txt");
-
-    while (c) {
-        r = rnd.int_boost_rnd(3, 8);
-        for (size_t i = 0; i < r; ++i) {
-            str += static_cast<char>(rnd.int_boost_rnd(97, 122));
-          }
-        fout << str << " ";
-        str.clear();
-        --c;
-      }
-    fout.close();
-    */
-
     system(REMOVE);
+
+    generate_the_file();
     scatter_to_alphabet();
 
     char ch = 'a';
@@ -268,7 +288,8 @@ int main ()
         ++ch;
         str = ch;
       }
-    _union();
+
+    _union(); /*---in this function: union all to one file ---*/
 
 
 //---------------------------------------------------------------

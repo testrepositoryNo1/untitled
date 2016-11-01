@@ -33,7 +33,8 @@
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
 //#include <boost/circular_buffer.hpp>
-#include <boost/variant.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 
 /*---crypto---*/
 /*
