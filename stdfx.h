@@ -4,7 +4,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-//#include <chrono>
 
 #include <vector>
 #include <deque>
@@ -21,6 +20,9 @@
 #include <memory>
 #include <cassert>
 #include <alloca.h>
+
+#include <termios.h>
+#include <unistd.h>
 
 //#include <stdlib.h>
 //#include <stdio.h>
