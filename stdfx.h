@@ -2,8 +2,8 @@
 #define STDFX_H
 
 #include <iostream>
-#include <iomanip>
-#include <fstream>
+//#include <iomanip>
+//#include <fstream>
 
 #include <vector>
 #include <deque>
@@ -12,17 +12,19 @@
 #include <functional>
 #include <string>
 #include <utility>
-#include <list>
-#include <set>
+//#include <list>
+//#include <set>
 //#include <stack>
 //#include <queue>
+#include <complex>
 
 #include <memory>
 #include <cassert>
 #include <alloca.h>
 
-#include <termios.h>
-#include <unistd.h>
+/*---password(hiden typing)---*/
+//#include <termios.h>
+//#include <unistd.h>
 
 //#include <stdlib.h>
 //#include <stdio.h>
@@ -35,8 +37,8 @@
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
 //#include <boost/circular_buffer.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
+//#include <boost/filesystem.hpp>
+//#include <boost/filesystem/path.hpp>
 
 /*---crypto---*/
 /*
