@@ -6,7 +6,7 @@ template <class T>
 void print(const T &v)
 {
     for (auto a: v)
-      cout << a << endl;
+      cout << a << " ";
 }
 
 
@@ -48,14 +48,25 @@ T Stack<T>::top() const
     return elems.back(); // Возврат копии последнего элемента
 }
 
+
+
+
 template <typename T>
 class Test
 {
   T var;
 public:
+  Test() { }
   Test(T _var) { var = _var; }
   void show() { cout << var << endl; }
+  void func(T args);
 };
+template <typename T>
+void Test<T>::func(T args)
+{
+  cout << boost::typeindex::type_id_runtime(args).pretty_name() << endl;
+}
+
 
 int main ()
 {
@@ -66,13 +77,34 @@ int main ()
     boost::chrono::milliseconds start(clock());
 //----------------------------------------------------------------
 
-    Test<int> tst1(987);
-    tst1.show();
+    my_boost_int_Rnd rnd;
+    vector<int> vec1;
+    vector<int> vec2;
+    vector<int> m_vec(20);
 
-    Test<string> tst2("string");
-    tst2.show();
+    for (size_t i = 0; i < 10; ++i) {
+        vec1.push_back(rnd.int_boost_rnd(1,20));
+        vec2.push_back(rnd.int_boost_rnd(1, 20));
+      }
+    sort(vec1.begin(), vec1.end());
+    sort(vec2.begin(),vec2.end());
+
+    print(vec1);
+    cout << endl;
+    print(vec2);
+    cout << endl;
+
+    merge(vec1.begin(), vec1.end(), vec2.begin(), vec2.end(), m_vec.begin());
+
+    print(m_vec);
+    cout << endl;
 
 
+
+    //find(vec.begin(), vec.end(), 987);
+    //auto a = binary_search(vec.begin(),vec.end(), 987);
+
+    //cout << boost::typeindex::type_id_runtime(a).pretty_name() << endl;
 
 //---------------------------------------------------------------
     boost::chrono::milliseconds end(clock());
