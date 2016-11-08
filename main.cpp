@@ -2,71 +2,31 @@
 
 using namespace std;
 
-template <class T>
-void print(const T &v)
+/*
+*
+* Предполагается что в эту функцию передается предварительно отсортированный
+* масив(вектор): [1...N + 1], в котором не хватает одного числа,
+* функция находит данное число и выводит его на экран.
+*
+*/
+void find_not_exist_var(vector<int> vec)
 {
-    for (auto a: v)
-      cout << a << " ";
-}
+    int half_of_vec = vec.size() / 2;
+    int not_exist = -1;
 
-
-
-template <typename T>
-class Stack {
-private:
-    vector<T> elems; // Элементы
-public:
-    void push(T const&);
-    void pop();
-    T top() const;
-    bool empty() const { return elems.empty(); }
-};
-
-template <typename T>
-void Stack<T>::push(T const& elem)
-{
-    elems.push_back(elem) ; // Добавление в стек
-                            // копии передаваемого
-                            // элемента
-}
-
-template <typename T>
-void Stack<T>::pop()
-{
-    if (elems.empty()) {
-        throw out_of_range(" Stack< >: : pop () : "" empty stack");
+    while(vec.size() > 2) {
+        if (vec.at(half_of_vec) != half_of_vec + vec.front() ) {
+            vec.erase((vec.begin() + (half_of_vec + 1)), vec.end());
+            half_of_vec = vec.size() / 2;
+          }
+        else {
+            vec.erase(vec.begin(), (vec.begin() + half_of_vec));
+            half_of_vec = vec.size() / 2;
+          }
       }
-    elems.pop_back() ; // Удаление последнего элемента
+    not_exist = (vec.front() + vec.back() ) / 2;
+    cout << "not exist " << not_exist << endl;
 }
-
-template <typename T>
-T Stack<T>::top() const
-{
-    if (elems.empty()) {
-        throw out_of_range(" Stack< >: : top () :"" empty stack");
-      }
-    return elems.back(); // Возврат копии последнего элемента
-}
-
-
-
-
-template <typename T>
-class Test
-{
-  T var;
-public:
-  Test() { }
-  Test(T _var) { var = _var; }
-  void show() { cout << var << endl; }
-  void func(T args);
-};
-template <typename T>
-void Test<T>::func(T args)
-{
-  cout << boost::typeindex::type_id_runtime(args).pretty_name() << endl;
-}
-
 
 int main ()
 {
@@ -77,34 +37,19 @@ int main ()
     boost::chrono::milliseconds start(clock());
 //----------------------------------------------------------------
 
+    vector<int> main_vec;
     my_boost_int_Rnd rnd;
-    vector<int> vec1;
-    vector<int> vec2;
-    vector<int> m_vec(20);
-
-    for (size_t i = 0; i < 10; ++i) {
-        vec1.push_back(rnd.int_boost_rnd(1,20));
-        vec2.push_back(rnd.int_boost_rnd(1, 20));
-      }
-    sort(vec1.begin(), vec1.end());
-    sort(vec2.begin(),vec2.end());
-
-    print(vec1);
-    cout << endl;
-    print(vec2);
-    cout << endl;
-
-    merge(vec1.begin(), vec1.end(), vec2.begin(), vec2.end(), m_vec.begin());
-
-    print(m_vec);
-    cout << endl;
+    int _rand = rnd.int_boost_rnd(1, 50000);
+    cout << "r = " << _rand << endl;
 
 
+    for (size_t i = 1; i < 50000; ++i)
+      main_vec.push_back(i);
 
-    //find(vec.begin(), vec.end(), 987);
-    //auto a = binary_search(vec.begin(),vec.end(), 987);
+    auto pos = remove(main_vec.begin(), main_vec.end(), _rand);
+    main_vec.erase(pos, main_vec.end());
 
-    //cout << boost::typeindex::type_id_runtime(a).pretty_name() << endl;
+    find_not_exist_var(main_vec);
 
 //---------------------------------------------------------------
     boost::chrono::milliseconds end(clock());
@@ -114,3 +59,5 @@ int main ()
     cout << dd / 1000.0 << " sec. = " << end - start << endl;
         return 0;
 }
+
+

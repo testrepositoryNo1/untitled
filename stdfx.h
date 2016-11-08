@@ -6,7 +6,7 @@
 //#include <fstream>
 
 #include <vector>
-#include <deque>
+//#include <deque>
 #include <algorithm>
 #include <iterator>
 #include <functional>
@@ -16,11 +16,11 @@
 //#include <set>
 //#include <stack>
 //#include <queue>
-#include <complex>
+//#include <complex>
 
 #include <memory>
-#include <cassert>
-#include <alloca.h>
+//#include <cassert>
+//#include <alloca.h>
 
 /*---password(hiden typing)---*/
 //#include <termios.h>
@@ -32,7 +32,7 @@
 //#include <string.h>
 
 /*---boost---*/
-#include <boost/type_index.hpp>
+//#include <boost/type_index.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
