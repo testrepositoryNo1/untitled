@@ -5,7 +5,7 @@ CONFIG -= qt
 CONFIG += c++14
 
 LIBS += -L/path/boost/lib/ -lboost_thread -lboost_system -lboost_chrono -lboost_filesystem
-LIBS += -L/usr/lib/libcryptopp.a -lcryptopp
+#LIBS += -L/usr/lib/libcryptopp.a -lcryptopp
 
 
 SOURCES += main.cpp

@@ -2,31 +2,48 @@
 
 using namespace std;
 
-/*
-*
-* Предполагается что в эту функцию передается предварительно отсортированный
-* масив(вектор): [1...N + 1], в котором не хватает одного числа,
-* функция находит данное число и выводит его на экран.
-*
-*/
-void find_not_exist_var(vector<int> vec)
+class Date
 {
-    int half_of_vec = vec.size() / 2;
-    int not_exist = -1;
+public:
+    unsigned day;
+    unsigned month;
+    unsigned year;
+public:
+    Date(string str) { get_date_sring(str); }
+    ~Date() {}
+    void get_date_sring(string str);
+};
 
-    while(vec.size() > 2) {
-        if (vec.at(half_of_vec) != half_of_vec + vec.front() ) {
-            vec.erase((vec.begin() + (half_of_vec + 1)), vec.end());
-            half_of_vec = vec.size() / 2;
-          }
-        else {
-            vec.erase(vec.begin(), (vec.begin() + half_of_vec));
-            half_of_vec = vec.size() / 2;
-          }
-      }
-    not_exist = (vec.front() + vec.back() ) / 2;
-    cout << "not exist " << not_exist << endl;
+void Date::get_date_sring(string str)
+{
+    string temp1, temp2, temp3;
+
+    for  (size_t i = 0, j = 3, k = 6; i < 2; ++i, ++j, ++k) {
+            temp1 += str.at(i);
+            temp2 += str.at(j);
+            temp3 += str.at(k);
+        }
+    day   = stoi(temp1, 0, 10);
+    month = stoi(temp2, 0, 10);
+    year  = stoi(temp3, 0, 10);
 }
+
+
+void sort_the_date(vector<Date> &data_vec);
+
+
+bool cmp_dates_up(const Date& d1, const Date& d2) {
+    return (d1.year < d2.year)  ||
+           (d1.year == d2.year && d1.month < d2.month) ||
+           (d1.year == d2.year && d1.month == d2.month && d1.day < d2.day);
+}
+bool cmp_dates_down(const Date& d1, const Date& d2) {
+    return (d1.year > d2.year)  ||
+           (d1.year == d2.year && d1.month > d2.month) ||
+           (d1.year == d2.year && d1.month == d2.month && d1.day > d2.day);
+}
+
+
 
 int main ()
 {
@@ -37,19 +54,78 @@ int main ()
     boost::chrono::milliseconds start(clock());
 //----------------------------------------------------------------
 
-    vector<int> main_vec;
-    my_boost_int_Rnd rnd;
-    int _rand = rnd.int_boost_rnd(1, 50000);
-    cout << "r = " << _rand << endl;
+    boost::filesystem::ifstream fin;
+    boost::filesystem::ofstream fout;
+
+    fin.open("SuperBackup", ios::in);
+    fout.open("SuperBackup_", ios::out);
+
+    vector<string> svec;
+    string str, temp;
 
 
-    for (size_t i = 1; i < 50000; ++i)
-      main_vec.push_back(i);
+    while (fin) {
+            getline(fin, str);
+            svec.push_back(str);
+            str.clear();
+        }
+    auto it = svec.begin();
+    for (; it != svec.end(); ++it) {
+            auto pos1 = it->find("body=") + 15;
+            auto pos2 = it->find("р\"");
+            if (pos1 != string::npos && pos2 != string::npos) {
+                while (pos1 != pos2) {
+                      fout << it->at(pos1);
+                      ++pos1;
+                    }
+                fout << "\n";
+                }
+        }
+    svec.clear();
+    fin.close();
+    fout.close();
 
-    auto pos = remove(main_vec.begin(), main_vec.end(), _rand);
-    main_vec.erase(pos, main_vec.end());
+    fin.open("SuperBackup_", ios::in);
+    fout.open("temp.txt", ios::out);
 
-    find_not_exist_var(main_vec);
+    while (fin) {
+            getline(fin, str);
+            svec.push_back(str);
+            str.clear();
+        }
+
+    vector<string> date_vec;
+
+    svec.pop_back();
+    it = svec.begin();
+    for (; it != svec.end(); ++it) {
+            size_t i = 0;
+            while (i < 8) {
+                    str += it->at(i);
+                    ++i;
+                    }
+            date_vec.push_back(str);
+            str.clear();
+                }
+
+    fin.close();
+    fout.close();
+
+    vector<Date> dvec;
+
+    for (auto a : date_vec)
+        dvec.push_back(a);
+
+
+    sort(dvec.begin(), dvec.end(), cmp_dates_down);
+
+
+    for(auto a : dvec)
+        cout << a.day << "."
+             << a.month << "." << a.year << endl;
+
+
+
 
 //---------------------------------------------------------------
     boost::chrono::milliseconds end(clock());
