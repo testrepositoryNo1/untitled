@@ -2,11 +2,12 @@
 #define STDFX_H
 
 #include <iostream>
-//#include <iomanip>
+#include <iomanip>
 //#include <fstream>
 
 #include <vector>
 //#include <deque>
+//#include <map>
 #include <algorithm>
 #include <iterator>
 #include <functional>
