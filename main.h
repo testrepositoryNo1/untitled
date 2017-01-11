@@ -2,6 +2,12 @@
 #define MAIN_H
 #include "stdfx.h"
 
+void Srand()
+{
+    srand(time(0));
+    srand(rand());
+}
+
 class my_boost_int_Rnd
 {
 public:
