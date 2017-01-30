@@ -41,4 +41,13 @@ public:
   }
 };
 
+
+void gen(std::vector<int> &v, size_t _size)
+{
+    my_boost_int_Rnd rnd;
+    for (size_t i = 0; i < _size; ++i) {
+        v.push_back(rnd.int_boost_rnd());
+        }
+}
+
 #endif // MAIN_H

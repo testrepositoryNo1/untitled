@@ -2,8 +2,8 @@
 #define STDFX_H
 
 #include <iostream>
-#include <iomanip>
-//#include <fstream>
+//#include <iomanip>
+#include <fstream>
 
 #include <vector>
 //#include <deque>
@@ -30,19 +30,19 @@
 //#include <stdlib.h>
 //#include <stdio.h>
 //#include <cstring>
-//#include <string.h>
+#include <string.h>
 
 /*---boost---*/
-//#include <boost/type_index.hpp>
+#include <boost/type_index.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 #include <boost/chrono.hpp>
 //#include <boost/circular_buffer.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
+//#include <boost/filesystem.hpp>
+//#include <boost/filesystem/path.hpp>
 
 /*---crypto---*/
-
+/*
 #include <cryptopp/rsa.h>
 #include <cryptopp/pubkey.h>
 #include <cryptopp/cryptlib.h>
@@ -51,9 +51,11 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/filters.h>
 #include <cryptopp/base64.h>
-
+*/
 /*--- hidden typing ---*/
+/*
 #include <termios.h>
 #include <unistd.h>
+*/
 
 #endif // STDFX_H

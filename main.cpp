@@ -2,37 +2,81 @@
 
 using namespace std;
 
-string encrypt(const string& str_in, const string& key)
+auto show_free_mem()
 {
-    string str_out;
-    CryptoPP::ECB_Mode<CryptoPP::AES>::Encryption encryption((byte*)key.c_str(), key.length());
+    system("free -h > .free.dat");
+    ifstream fin(".free.dat", ios_base::in);
+    vector<string> vec;
+    vec.push_back("    ");
 
-    CryptoPP::StringSource encryptor(str_in, true,
-            new CryptoPP::StreamTransformationFilter(encryption,
-                new CryptoPP::Base64Encoder(
-                    new CryptoPP::StringSink(str_out),
-                    false // do not append a newline
-                )
-            )
-    );
-    return str_out;
+    string str;
+    string matr[2][7];
+
+    while (fin) {
+            fin >> str;
+            vec.push_back(str);
+            str.clear();
+        }
+    fin.close();
+
+    auto it = vec.begin();
+    for (size_t i = 0; i < 2; ++i) {
+            for (size_t j = 0; j < 7; ++j){
+                    matr[i][j] = *it;
+                    ++it;
+                }
+        }
+    return matr[1][3];
 }
 
-string decrypt(const string& str_in, const string& key)
+class column_and_row
 {
-    string str_out;
+    int column;
+    int row;
+    int min;
+public:
+    column_and_row(){column = 0; row = 0; min = 0; }
+    column_and_row(int c, int r) { column = c; row = r; }
+    column_and_row(const column_and_row &col_and_row)
+    {
+        column = col_and_row.column; row = col_and_row.row; min = col_and_row.min;
+    }
 
-    CryptoPP::ECB_Mode<CryptoPP::AES>::Decryption decryption((byte*)key.c_str(), key.length());
+    column_and_row& operator=(const column_and_row &collrow) {
+        column = collrow.column;
+        row = collrow.row;
+        min = collrow.min;
+        return *this;
+    }
 
-    CryptoPP::StringSource decryptor(str_in, true,
-        new CryptoPP::Base64Decoder(
-                new CryptoPP::StreamTransformationFilter(decryption,
-                    new CryptoPP::StringSink(str_out)
-                )
-        )
-    );
-    return str_out;
+
+    void set_cr(int c, int r, int m) { column = c; row = r; min = m; }
+    void show_cr()
+    {
+        cout << "min:    " << min << endl;
+        cout << "cloumn: " << column << endl;
+        cout << "row:    " << row << endl;
+    }
+};
+
+
+column_and_row find_min(int arr[10][10])
+{
+    int min = arr[0][0];
+    column_and_row cr;
+
+    for (size_t i = 0; i < 10; ++i) {
+            for (size_t j = 0; j < 10; ++j) {
+                    if (arr[i][j] < min) {
+                      min = arr[i][j];
+                      cr.set_cr((j + 1), (i + 1), min);
+                      };
+                }
+        }
+    return cr;
 }
+
+
 
 
 int main ()
@@ -42,67 +86,35 @@ int main ()
       boost::chrono::milliseconds start(clock());
 //----------------------------------------------------------------
 
-      /*termios oldt;
-      tcgetattr(STDIN_FILENO, &oldt);
-      termios newt = oldt;
-      newt.c_lflag &= ~ECHO;
-      tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+      my_boost_int_Rnd rnd;
+      int arr[10][10];
 
-      string s;
-      cout << "password: ";
-      getline(cin, s);
-      */
-
-
-      string str;
-      string key = "1234567890123456";
-
-      string str_encrypted,
-             str_decrypted;
-
-      ifstream fin("t1.zip", ios_base::binary | ios_base::in);
-      ofstream fout("t1.zip.cr", ios_base::binary | ios_base::out);
-
-      while (fin) {
-              getline(fin, str);
-
-              try {
-                  str_encrypted = encrypt(str, key);
-              }
-              catch (const CryptoPP::Exception& e) {
-                  cerr << e.what() << endl;
-              }
-
-              fout << str_encrypted << endl;
-              str.clear();
-              str_encrypted.clear();
+      for (size_t i = 0; i < 10; ++i) {
+              for (size_t j = 0; j < 10; ++j) {
+                      arr[i][j] = rnd.int_boost_rnd(100, 300);
+                  }
           }
 
-      fin.close();
-      fout.close();
 
-
-      fin.open("t1.zip.cr", ios_base::binary | ios_base::in);
-      fout.open("t2.zip", ios_base::binary | ios_base::out);
-
-
-      while (fin) {
-              getline(fin, str);
-              try {
-                  str_decrypted = decrypt(str, key);
-              }
-              catch (const CryptoPP::Exception& e) {
-                  cerr << e.what() << endl;
-              }
-              fout << str_decrypted << endl;
+      for (size_t i = 0; i < 10; ++i) {
+              for (size_t j = 0; j < 10; ++j) {
+                      cout << arr[i][j] << " ";
+                  }
+              cout << endl;
           }
-      fin.close();
-      fout.close();
+
+      cout << "---------------------------------------------\n";
+
+      column_and_row ab;
+
+      ab = find_min(arr);
+
+      ab.show_cr();
 
 
 
 
-      cout << CryptoPP::AES::MIN_KEYLENGTH << endl;
+      //cout << boost::typeindex::type_id_runtime(elem).pretty_name() << endl;
 
 //---------------------------------------------------------------
       boost::chrono::milliseconds end(clock());
@@ -112,5 +124,7 @@ int main ()
       cout << dd / 1000.0 << " sec. = " << end - start << endl;
         return 0;
 }
+
+
 
 
