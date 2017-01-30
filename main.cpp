@@ -2,81 +2,29 @@
 
 using namespace std;
 
-auto show_free_mem()
+
+size_t strlenght(const char* str)
 {
-    system("free -h > .free.dat");
-    ifstream fin(".free.dat", ios_base::in);
-    vector<string> vec;
-    vec.push_back("    ");
+    const char* it = &str[0];
+    size_t sz = 0;
 
-    string str;
-    string matr[2][7];
-
-    while (fin) {
-            fin >> str;
-            vec.push_back(str);
-            str.clear();
+    while(*it != '\0') {
+            ++it;
+            ++sz;
         }
-    fin.close();
 
-    auto it = vec.begin();
-    for (size_t i = 0; i < 2; ++i) {
-            for (size_t j = 0; j < 7; ++j){
-                    matr[i][j] = *it;
-                    ++it;
-                }
-        }
-    return matr[1][3];
+    return sz;
 }
 
-class column_and_row
+char* revert(const char* str)
 {
-    int column;
-    int row;
-    int min;
-public:
-    column_and_row(){column = 0; row = 0; min = 0; }
-    column_and_row(int c, int r) { column = c; row = r; }
-    column_and_row(const column_and_row &col_and_row)
-    {
-        column = col_and_row.column; row = col_and_row.row; min = col_and_row.min;
-    }
+    char* rstr = new char [strlenght(str)];
 
-    column_and_row& operator=(const column_and_row &collrow) {
-        column = collrow.column;
-        row = collrow.row;
-        min = collrow.min;
-        return *this;
-    }
-
-
-    void set_cr(int c, int r, int m) { column = c; row = r; min = m; }
-    void show_cr()
-    {
-        cout << "min:    " << min << endl;
-        cout << "cloumn: " << column << endl;
-        cout << "row:    " << row << endl;
-    }
-};
-
-
-column_and_row find_min(int arr[10][10])
-{
-    int min = arr[0][0];
-    column_and_row cr;
-
-    for (size_t i = 0; i < 10; ++i) {
-            for (size_t j = 0; j < 10; ++j) {
-                    if (arr[i][j] < min) {
-                      min = arr[i][j];
-                      cr.set_cr((j + 1), (i + 1), min);
-                      };
-                }
+    for (int i = strlenght(str) - 1, j = 0; i >= 0; --i, ++j) {
+            rstr[j] = str[i];
         }
-    return cr;
+    return rstr;
 }
-
-
 
 
 int main ()
@@ -87,34 +35,17 @@ int main ()
 //----------------------------------------------------------------
 
       my_boost_int_Rnd rnd;
-      int arr[10][10];
+
+      char *str = new char [10];
 
       for (size_t i = 0; i < 10; ++i) {
-              for (size_t j = 0; j < 10; ++j) {
-                      arr[i][j] = rnd.int_boost_rnd(100, 300);
-                  }
+              str[i] = static_cast<char>(rnd.int_boost_rnd(97, 122));
           }
 
+      cout << str << endl;
+      cout << revert(str) << endl;
 
-      for (size_t i = 0; i < 10; ++i) {
-              for (size_t j = 0; j < 10; ++j) {
-                      cout << arr[i][j] << " ";
-                  }
-              cout << endl;
-          }
-
-      cout << "---------------------------------------------\n";
-
-      column_and_row ab;
-
-      ab = find_min(arr);
-
-      ab.show_cr();
-
-
-
-
-      //cout << boost::typeindex::type_id_runtime(elem).pretty_name() << endl;
+      //cout << boost::typeindex::type_id_runtime(str).pretty_name() << endl;
 
 //---------------------------------------------------------------
       boost::chrono::milliseconds end(clock());
