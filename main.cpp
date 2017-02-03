@@ -3,51 +3,69 @@
 using namespace std;
 
 
-size_t strlenght(const char* str)
+enum class month_name
 {
-    const char* it = &str[0];
-    size_t sz = 0;
+    jan = 1, feb, mar, apr, may,june, jul,aug, sem, nov, oct, dec
+};
 
-    while(*it != '\0') {
-            ++it;
-            ++sz;
-        }
 
-    return sz;
+class Date
+{
+    uint y;
+    month_name m;
+    uint d;
+public:
+    Date() : y{1}, m{month_name::jan}, d{1} { y = 2017; m = month_name::jan; d = 9;}
+    Date(uint dd, month_name mm, uint yy) { y = yy, m = mm, d = dd; }
+
+    void add_day(int n);
+    uint show_y() { return y; }
+    uint show_m() { return static_cast<uint>(m); }
+    uint show_d() { return d; }
+    void operator =(Date& a) { d = a.d; m = a.m; y = a.y; }
+    friend ostream& operator<<(ostream& os, const Date& dt);
+
+};
+
+void Date::add_day(int n)
+{
+    d += n;
 }
 
-char* revert(const char* str)
+ostream& operator<<(ostream& os, const Date& dt)
 {
-    char* rstr = new char [strlenght(str)];
-
-    for (int i = strlenght(str) - 1, j = 0; i >= 0; --i, ++j) {
-            rstr[j] = str[i];
-        }
-    return rstr;
+    os << dt.d << '.' << static_cast<int>(dt.m) << '.' << dt.y;
+    return os;
 }
-
 
 int main ()
 {
       Srand();
-      ostream_iterator<int> out(cout, "\n");
+      ostream_iterator<string> out(cout, "\n");
       boost::chrono::milliseconds start(clock());
-//----------------------------------------------------------------
+///----------------------------------------------------------------
 
-      my_boost_int_Rnd rnd;
 
-      char *str = new char [10];
+      Date d(3, month_name::feb, 2017);
+      Date s(7, month_name::nov, 2000);
 
-      for (size_t i = 0; i < 10; ++i) {
-              str[i] = static_cast<char>(rnd.int_boost_rnd(97, 122));
-          }
 
-      cout << str << endl;
-      cout << revert(str) << endl;
+      cout << d.show_d() << "." << d.show_m() << "." << d.show_y() << endl;
 
-      //cout << boost::typeindex::type_id_runtime(str).pretty_name() << endl;
 
-//---------------------------------------------------------------
+      cout << s << endl;
+      cout << Date{12, month_name::dec, 2012} << endl;
+
+      /*
+      Date o;
+
+      o.add_day(-7);
+
+      cout << o.show_d() << "." << o.show_m() << "." << o.show_y() << endl;
+*/
+      //cout << boost::typeindex::type_id_runtime().pretty_name() << endl;
+
+///---------------------------------------------------------------
       boost::chrono::milliseconds end(clock());
       using ms = boost::chrono::milliseconds;
       ms dur = boost::chrono::duration_cast<ms>(end - start);

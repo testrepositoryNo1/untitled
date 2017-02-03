@@ -7,14 +7,14 @@
 
 #include <vector>
 //#include <deque>
-//#include <map>
+#include <map>
 #include <algorithm>
 #include <iterator>
 #include <functional>
 #include <string>
 #include <utility>
 //#include <list>
-//#include <set>
+#include <set>
 //#include <stack>
 //#include <queue>
 //#include <complex>
@@ -30,7 +30,8 @@
 //#include <stdlib.h>
 //#include <stdio.h>
 //#include <cstring>
-#include <string.h>
+//#include <string.h>
+//#include <bitset>
 
 /*---boost---*/
 #include <boost/type_index.hpp>
