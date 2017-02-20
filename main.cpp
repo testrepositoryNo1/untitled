@@ -130,23 +130,25 @@ int main ()
 
 
 
-      size_t max_size = 3;
+      size_t max_size = 8;
       size_t tryes = 1;
       size_t sz_for_str = 1;
       bool _break = false;
 
 
-      for (; tryes < max_size; ++tryes) {
+      for (; tryes <= max_size; ++tryes) {
               switch (tryes) {
                   case 1:
                       for (auto it = ch_vec.begin(); it != ch_vec.end(); ++it) {
                               find_the_match = *it;
                               ++count;
                               if (find_the_match == pwd) {
-                                      cout << "find_1: " << find_the_match << endl;
-                                      _break = true; break;
+                                      cout << "find: " << find_the_match << endl;
+                                      _break = true;
+                                      tryes =  max_size;
+                                      break;
                                   }
-                          } break;
+                          } if (_break) break;
                   case 2:
                       _break = false;
                       sz_for_str = 2;
@@ -160,21 +162,21 @@ int main ()
                               for (; iter1 != ch_vec.end(); ++iter1) {
                                       find_the_match.at(i) = *iter1;
                                       iter2 = ch_vec.begin();
-                                      ++count;
                                       for (size_t j = i + 1; iter2 != ch_vec.end(); ++iter2) {
                                               find_the_match.at(j) = *iter2;
                                               ++count;
                                               if (find_the_match == pwd) {
-                                                      cout << "find_2: " << find_the_match << endl;
-                                                      _break = true; break;
+                                                      cout << "find: " << find_the_match << endl;
+                                                      _break = true;
+                                                      tryes =  max_size;
+                                                      break;
                                                   };
                                               if (find_the_match == "zz" && find_the_match != pwd) {
-                                                         _break = true; break;
+                                                         _break = true;
                                                   };
                                           }
-                                      if (_break) break;
                                   }
-                          } break;
+                          } if (_break) break;
                   case 3:
                       _break = false;
                       sz_for_str = 3;
@@ -198,7 +200,7 @@ int main ()
                                                for (size_t k = j + 1; iter3 != ch_vec.end(); ++iter3) {
                                                        find_the_match.at(k) = *iter3;
                                                        if (find_the_match == pwd) {
-                                                               cout << "find_3: " << find_the_match << endl;
+                                                               cout << "find: " << find_the_match << endl;
                                                                _break = true; break;
                                                            }
                                                    }
@@ -208,7 +210,6 @@ int main ()
                                   }
                           } break;
                   }
-              if (_break) break;
           }
 
       cout << "--------------------------\n";
