@@ -114,7 +114,7 @@ int main ()
       boost::chrono::milliseconds start(clock());
 ///----------------------------------------------------------------
 
-      while (true) {
+
       string pwd = "";
 
       cout << "Вводите пароль: ";
@@ -126,11 +126,16 @@ int main ()
       vector<char> ch_vec {'a','b','c','d','e','f',
                            'g','h','i','j','k','l',
                            'm','n','o','p','q','r',
-                           's','t','u','w','x','y','z'};
+                           's','t','u','w','x','y','z',
+                           48,49,50,51,52,53,54,55,56,57,
+                           'A','B','B','B','E','F',
+                           'G','G','G','J','K','L',
+                           'M','N','O','P','Q','R',
+                           'S','T','U','W','X','Y','Z'};
 
 
 
-      size_t max_size = 8;
+      size_t max_size = 3; /* max elements */
       size_t tryes = 1;
       size_t sz_for_str = 1;
       bool _break = false;
@@ -143,11 +148,16 @@ int main ()
                               find_the_match = *it;
                               ++count;
                               if (find_the_match == pwd) {
-                                      cout << "find: " << find_the_match << endl;
+                                      cout << "find: " << find_the_match
+                                           << " after " << count << " tryes" << endl;
                                       _break = true;
-                                      tryes =  max_size;
+                                      tryes = max_size;
                                       break;
-                                  }
+                                  };
+                              if (find_the_match == "Z" && find_the_match != pwd) {
+                                      _break = true;
+                                      break;
+                                  };
                           } if (_break) break;
                   case 2:
                       _break = false;
@@ -162,16 +172,18 @@ int main ()
                               for (; iter1 != ch_vec.end(); ++iter1) {
                                       find_the_match.at(i) = *iter1;
                                       iter2 = ch_vec.begin();
+                                      ++count;
                                       for (size_t j = i + 1; iter2 != ch_vec.end(); ++iter2) {
                                               find_the_match.at(j) = *iter2;
                                               ++count;
                                               if (find_the_match == pwd) {
-                                                      cout << "find: " << find_the_match << endl;
+                                                      cout << "find: " << find_the_match
+                                                           << " after " << count << " tryes" << endl;
                                                       _break = true;
                                                       tryes =  max_size;
                                                       break;
                                                   };
-                                              if (find_the_match == "zz" && find_the_match != pwd) {
+                                              if (find_the_match == "ZZ" && find_the_match != pwd) {
                                                          _break = true;
                                                   };
                                           }
@@ -188,39 +200,37 @@ int main ()
                               find_the_match.shrink_to_fit();
                               find_the_match.resize(sz_for_str);
                               size_t i = sz_for_str - 3;
-
+                              ++count;
                               for (; iter1 != ch_vec.end(); ++iter1) {
                                       find_the_match.at(i) = *iter1;
                                       iter2 = ch_vec.begin();
-
+                                      ++count;
                                       for (size_t j = i + 1; iter2 != ch_vec.end(); ++iter2) {
                                               find_the_match.at(j) = *iter2;
                                                iter3 = ch_vec.begin();
-
+                                               ++count;
                                                for (size_t k = j + 1; iter3 != ch_vec.end(); ++iter3) {
                                                        find_the_match.at(k) = *iter3;
+                                                       ++count;
                                                        if (find_the_match == pwd) {
-                                                               cout << "find: " << find_the_match << endl;
+                                                               cout << "find: " << find_the_match
+                                                                    << " after " << count << " tryes" << endl;
                                                                _break = true; break;
-                                                           }
+                                                           };
+                                                       if (find_the_match == "ZZZ" && find_the_match != pwd) {
+                                                                  _break = true;
+                                                           };
                                                    }
                                                if (_break) break;
                                           }
                                       if (_break) break;
                                   }
+
                           } break;
                   }
           }
 
       cout << "--------------------------\n";
-          }
-
-
-
-
-
-
-
 
 
 
