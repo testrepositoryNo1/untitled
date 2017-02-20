@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += c++14
 CONFIG += -g
-
+CONFIG += qt thread debug
 
 LIBS += -L/path/boost/lib/ -lboost_thread -lboost_system -lboost_chrono -lboost_filesystem
 LIBS += -L/usr/lib/libcryptopp.a -lcryptopp
