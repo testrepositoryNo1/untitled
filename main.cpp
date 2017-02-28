@@ -1,4 +1,5 @@
 #include "main.h"
+#include <clocale>
 
 using namespace std;
 ostream_iterator<int> out(cout, " ");
@@ -97,6 +98,14 @@ void f(T&& arg, int x)
     cout << endl;
 }
 
+template<typename T>
+T fn(T&& x)
+{
+    cout << "x = " << x << endl;
+    ++x;
+    return x;
+}
+
 
 int main ()
 {
@@ -104,190 +113,94 @@ int main ()
       boost::chrono::milliseconds start(clock());
 ///----------------------------------------------------------------
 
-      while (true) {
 
-      string pwd = "";
-
-      cout << "Вводите пароль: ";
-      cin >> pwd;
-
-
-      string find_the_match = "";
-      size_t count = 0;
-      vector<char> ch_vec {'a','b','c','d','e','f',
-                           'g','h','i','j','k','l',
-                           'm','n','o','p','q','r',
-                           's','t','u','w','x','y','z',
-                           48,49,50,51,52,53,54,55,56,57,
-                           'A','B','B','B','E','F',
-                           'G','G','G','J','K','L',
-                           'M','N','O','P','Q','R',
-                           'S','T','U','W','X','Y','Z',
-                           '~','!','@','#','$','%','^','&','*','(',')','+','=','[',']','{','}'};
+      vector<char> chrvec{'a','b','c','d','e','f',
+                          'g','h','i','j','k','l',
+                          'm','n','o','p','q','r','s',
+                          't','u','v','w','x','y','z'};
 
 
+      ifstream fin("nounlist.txt", ios_base::in);
+      string str;
 
-      size_t max_size = 3; /* max elements */
-      size_t tryes = 1;
-      size_t sz_for_str = 1;
-      bool _break = false;
+      vector<string> svec;
 
-
-      for (; tryes <= max_size; ++tryes) {
-              switch (tryes) {
-                  case 1:
-                      for (auto it = ch_vec.begin(); it != ch_vec.end(); ++it) {
-                              find_the_match = *it;
-                              ++count;
-                              if (find_the_match == pwd) {
-                                      cout << "find: " << find_the_match
-                                           << " after " << count << " tryes" << endl;
-                                      _break = true;
-                                      tryes = max_size;
-                                      break;
-                                  };
-                              if (find_the_match == "}" && find_the_match != pwd) {
-                                      _break = true;
-                                      break;
-                                  };
-                          } if (_break) break;
-                  case 2:
-                      _break = false;
-                      sz_for_str = 2;
-                      while (!_break) {
-                              vector<char>::iterator iter1 = ch_vec.begin();
-                              vector<char>::iterator iter2 = ch_vec.begin();
-                              find_the_match.clear();
-                              find_the_match.shrink_to_fit();
-                              find_the_match.resize(sz_for_str);
-                              size_t i = sz_for_str - 2;
-                              for (; iter1 != ch_vec.end(); ++iter1) {
-                                      find_the_match.at(i) = *iter1;
-                                      iter2 = ch_vec.begin();
-                                      ++count;
-                                      for (size_t j = i + 1; iter2 != ch_vec.end(); ++iter2) {
-                                              find_the_match.at(j) = *iter2;
-                                              ++count;
-                                              if (find_the_match == pwd) {
-                                                      cout << "find: " << find_the_match
-                                                           << " after " << count << " tryes" << endl;
-                                                      _break = true;
-                                                      tryes =  max_size;
-                                                      break;
-                                                  };
-                                              if (find_the_match == "}}" && find_the_match != pwd) {
-                                                         _break = true;
-                                                  };
-                                          }
-                                  }
-                          } if (_break) break;
-                  case 3:
-                      _break = false;
-                      sz_for_str = 3;
-                      while (!_break) {
-                              vector<char>::iterator iter1 = ch_vec.begin();
-                              vector<char>::iterator iter2 = ch_vec.begin();
-                              vector<char>::iterator iter3 = ch_vec.begin();
-                              find_the_match.clear();
-                              find_the_match.shrink_to_fit();
-                              find_the_match.resize(sz_for_str);
-                              size_t i = sz_for_str - 3;
-                              ++count;
-                              for (; iter1 != ch_vec.end(); ++iter1) {
-                                      find_the_match.at(i) = *iter1;
-                                      iter2 = ch_vec.begin();
-                                      ++count;
-                                      for (size_t j = i + 1; iter2 != ch_vec.end(); ++iter2) {
-                                              find_the_match.at(j) = *iter2;
-                                               iter3 = ch_vec.begin();
-                                               ++count;
-                                               for (size_t k = j + 1; iter3 != ch_vec.end(); ++iter3) {
-                                                       find_the_match.at(k) = *iter3;
-                                                       ++count;
-                                                       if (find_the_match == pwd) {
-                                                               cout << "find: " << find_the_match
-                                                                    << " after " << count << " tryes" << endl;
-                                                               _break = true; break;
-                                                           };
-                                                       if (find_the_match == "}}}" && find_the_match != pwd) {
-                                                                  _break = true;
-                                                           };
-                                                   }
-                                               if (_break) break;
-                                          }
-                                      if (_break) break;
-                                  }
-
-                          } break;
-                  }
+      while (fin) {
+             getline(fin, str);
+             svec.push_back(str);
+             str.clear();
           }
 
-      cout << "--------------------------\n";
+
+      string frst = "man";
+
+      string lst = "war";
 
 
-}
 
-      /*bool _break = false, _continue = false;
+      vector<string> svec2;
+      ofstream fout("results.txt", ios_base::out);
 
-      while (!_break) {
-              vector<char>::iterator iter = ch_vec.begin();
-              for (; iter != ch_vec.end(); ++iter) {
-                      find_the_match = *iter;
-                      if (find_the_match == pwd) {
-                              _break    = true;
-                              _continue = false;
-                              break;
-                          }
-                      else {
-                              ++count;
-                              if (count > ch_vec.size()) {
-                                      _break    = true;
-                                      _continue = true;
-                                  };
-                          }
+      for (auto elem : svec) {
+              if (elem.size() == frst.size()) {
+                      svec2.push_back(elem);
+                      fout << elem << endl;
                   }
           }
+      fout.close();
 
-      if (_continue) {
-              _break = false;
-              static size_t sz_for_str = 2;
-              while (!_break) {
-                      vector<char>::iterator iter1 = ch_vec.begin();
-                      vector<char>::iterator iter2 = ch_vec.begin();
-                      find_the_match.clear();
-                      find_the_match.shrink_to_fit();
 
-                      find_the_match.resize(sz_for_str);
-                      size_t i = sz_for_str - 2;
-                      for (; iter1 != ch_vec.end(); ++iter1) {
-                              find_the_match.at(i) = *iter1;
-                              iter2 = ch_vec.begin();
-                              for (size_t j = i + 1; iter2 != ch_vec.end(); ++iter2) {
-                                      find_the_match.at(j) = *iter2;
-                                      if (find_the_match == pwd) {
-                                              _break = true; break;
-                                          }
-                                      else {
-                                              ++count;
-                                          }
-                                  }
-                              if (_break) break;
+      vector<string> stack;
+      stack.push_back(frst);
+      string tmp = frst;
+
+
+ /*     for (auto it = svec2.begin(); it != svec2.end(); ++it) {
+              for (int i = frst.size() - 1; i >= 0; --i) {
+                      tmp = stack.back();
+                      for (size_t j = 0; j < chrvec.size(); ++j) {
+                              tmp.at(i) = chrvec.at(j);
+                              auto it = find(svec2.begin(),svec2.end(), tmp);
+                              if (it != svec2.end() && tmp != frst) {
+                                   stack.push_back(tmp);
+                                  };
+                              if (tmp == lst) break;
                           }
+                      if (tmp == lst) break;
                   }
-          };
+              if (tmp == lst) break;
+          }
 
-      cout << "we found the password: " << find_the_match
-           << " after " << count  << " tryes!" << endl;
-
+      for (auto elem : stack) {
+              cout << elem << endl;
+          }
 */
 
-      /*
-      Class_1* obj_1 = new Class_1;
-      Class_2* obj_2 = new Class_2;
-      Class_3* obj_3 = new Class_3;
 
-      delete obj_2;
-      */
+      while(tmp != lst) {
+              for (auto it = svec2.begin(); it != svec2.end(); ++it) {
+                      for (int i = frst.size() - 1; i >= 0; --i) {
+                              tmp = stack.back();
+                              for (size_t j = 0; j < chrvec.size(); ++j) {
+                                      tmp.at(i) = chrvec.at(j);
+                                      auto it = find(svec2.begin(),svec2.end(), tmp);
+                                      if (it != svec2.end() && tmp != frst) {
+                                           stack.push_back(tmp);
+                                           cout << tmp << endl;
+                                          };
+                                      if (tmp == lst) break;
+                                  }
+                              if (tmp == lst) break;
+                          }
+                      if (tmp == lst) break;
+                  }
+          }
+
+
+      fin.close();
+      fout.close();
+
+
 ///---------------------------------------------------------------
 
       boost::chrono::milliseconds end(clock());
