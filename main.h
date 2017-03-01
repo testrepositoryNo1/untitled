@@ -50,4 +50,12 @@ void gen(std::vector<int> &v, size_t _size)
         }
 }
 
+void gen(std::vector<int> &v, size_t _size, int dest_from, int dest_to)
+{
+    my_boost_int_Rnd rnd;
+    for (size_t i = 0; i < _size; ++i) {
+        v.push_back(rnd.int_boost_rnd(dest_from, dest_to));
+        }
+}
+
 #endif // MAIN_H

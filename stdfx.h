@@ -7,20 +7,20 @@
 
 #include <vector>
 //#include <deque>
-#include <map>
+//#include <map>
 #include <algorithm>
 #include <iterator>
 #include <functional>
 #include <string>
 #include <utility>
 //#include <list>
-#include <set>
+//#include <set>
 //#include <stack>
 //#include <queue>
 //#include <complex>
 
 #include <memory>
-#include <thread>
+//#include <thread>
 //#include <cassert>
 //#include <alloca.h>
 
