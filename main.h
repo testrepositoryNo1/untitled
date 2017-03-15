@@ -10,8 +10,8 @@ void Srand()
 
 class my_boost_int_Rnd
 {
-public:
 
+public:
   int64_t int_boost_rnd()
   {
     boost::random::mt19937 temp_gen(clock() * time(0) / rand());       /* seed */
@@ -34,10 +34,31 @@ public:
   long double double_boost_rnd()
   {
     my_boost_int_Rnd ob;
-
     double r =  ob.int_boost_rnd() / 1.0;
     double x = r / ob.int_boost_rnd() * ob.int_boost_rnd(1, 100);
     return x;
+  }
+
+  long double double_boost_rnd(double a, double b)
+  {
+      my_boost_int_Rnd ob;
+      boost::random::mt19937 temp_gen(clock() * time(0) / rand());       /* seed is clock*/
+      boost::random::uniform_real_distribution<>temp_di;
+      boost::random::mt19937 gen(temp_di(temp_gen));
+      boost::random::uniform_real_distribution<> dist(a, b);
+      long double r = dist(gen) * ob.double_boost_rnd();
+
+      bool _break = false;
+
+      while (!_break) {
+              if (r <= b && r >= a) {
+                      _break = true;
+                  }
+              else {
+                      r = dist(gen) * ob.double_boost_rnd();
+                  }
+          }
+      return r;
   }
 };
 

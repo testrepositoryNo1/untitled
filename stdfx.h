@@ -2,7 +2,7 @@
 #define STDFX_H
 
 #include <iostream>
-//#include <iomanip>
+#include <iomanip>
 #include <fstream>
 
 #include <vector>
@@ -38,6 +38,7 @@
 #include <boost/type_index.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
+#include <boost/random/uniform_real_distribution.hpp>
 #include <boost/chrono.hpp>
 //#include <boost/circular_buffer.hpp>
 //#include <boost/filesystem.hpp>

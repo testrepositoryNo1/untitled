@@ -3,6 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 CONFIG += c++14
+CONFIG += c++17
 CONFIG += -g
 CONFIG += qt thread debug
 
