@@ -1,266 +1,68 @@
-#include "main.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <pcap.h>
+#include <vector>
 
 using namespace std;
-ostream_iterator<int> out(cout, " ");
 
-
-int find_the_index(const vector<int> &v, int _value)
+int main()
 {
-    int index = 0;
-    auto iter = find(v.begin(), v.end(), _value);
-    auto beg = v.begin();
+    string file = "data.pcapng";
+    char errbuff[PCAP_ERRBUF_SIZE]; // Create an char array to hold the error.
 
-    if (iter != v.end()) {
-            while (beg != iter) {
-                    ++index;
-                    ++beg;
+    pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
+
+    struct pcap_pkthdr *header; //Create a header and a data object
+
+    // Create a character array using a u_char
+    // u_char is defined here:
+    // typedef unsigned char   u_char;
+    const u_char *data;
+    vector<int> vec;
+    //Loop through packets and print them to screen
+    u_int packetCount = 0;
+    while (int returnValue = pcap_next_ex(pcap, &header, &data) >= 0) {
+            for (u_int i=0; (i < header->caplen ) ; i++) {
+                    int dt = data[i];
+                    vec.push_back(dt);
                 }
-        };
-    if (index >= 0)  return index;
-    else return -1;
-}
+            int Protocol = vec.at(23); // this is thr protocol byte
+            // Protocol = 17 for UDP
+            if (Protocol == 17) {
+                    cout << dec << "Packet # " << ++packetCount << endl;
+                    // Show the size in bytes of the packet
+                    cout << dec << "Packet size: " << header->len << " bytes" << endl;
+                    printf("Epoch Time: %d:%d seconds\n", header->ts.tv_sec, header->ts.tv_usec);
+                    // Show a warning if the length captured is different
+                    if (header->len != header->caplen) {
+                            cout << "Warning! Capture size different than packet size: " << header->len << "bytes" << endl;
+                        };
 
+                    // loop through the packet and print it as hexidecimal representations  of octets
+                    // We also have a function that does this similarly below: PrintData()
+                    for (u_int i = 0; i < header->caplen; ++i) {
+                            // Start printing on the next after every 16 octets
+                            if ( (i % 16) == 0) {
+                                    cout << "\n";
+                                };
 
-class TestClass
-{
-    int a;
-    unique_ptr<int> p;
-public:
-    TestClass() : a{0}, p(new int(123)) { }
-    TestClass(int r) : a{r} { }
-    void operator =(TestClass &obj)
-    {
-        a = obj.a;
-        p = move(obj.p);
-    }
-
-    ~TestClass()
-    {
-        //delete p; p = nullptr;
-        cout << "destructor" << endl;
-    }
-    void show() const { cout << "show: " << a  << endl; }
-};
-
-
-/*
-enum animal{dog, cat};
-
-class PetShop
-{
-    uint   animal_age;
-    bool   animal_sex; // true - boy, false - girl :-P
-    double animal_coast;
-    static size_t dog_count;
-    static size_t cat_count;
-    static int r;
-public:
-    PetShop() : animal_age{0}, animal_sex{true}, animal_coast{0.0} { }
-    PetShop(animal _animal, uint _animal_age, bool _animal_sex, double _animal_coast);
-    void sell(animal _animal, bool _animal_sex, double _animal_coast);
-    void sell(animal _animal);
-    void buy(animal _animal, uint _animal_age, bool _animal_sex, double _animal_coast);
-    void show(animal _animal);
-};
-
-size_t PetShop::dog_count = 0;
-size_t PetShop::cat_count = 0;
-
-PetShop::PetShop(animal _animal, uint _animal_age, bool _animal_sex, double _animal_coast)
-{
-    if (_animal == animal::dog) {
-            ++dog_count;
-        }
-    else {
-            ++cat_count;
-        }
-    animal_age   = _animal_age;
-    animal_sex   = _animal_sex;
-    animal_coast = _animal_coast;
-}
-
-void PetShop::sell(animal _animal, bool _animal_sex, double _animal_coast)
-{
-    if (_animal == animal::dog) {
-            --dog_count;
-        }
-    else {
-           --cat_count;
-        }
-}
-
-void PetShop::sell(animal _animal)
-{
-    if (_animal == animal::dog) {
-            --dog_count;
-        }
-    else {
-           --cat_count;
-        }
-}
-
-
-void PetShop::show(animal _animal)
-{
-    if (_animal == animal::dog) {
-            cout << "dog's age: " << animal_age << endl;
-            cout << "      sex: ";
-            if (animal_sex) {
-                    cout << "boy" << endl;
+                            // Print each octet as hex (x), make sure there is always two characters (.2).
+                            //printf("%.2x ", data[i]);
+                            int dt = data[i];
+                            cout << hex << dt << " ";
+                            //cout.unsetf (ios::hex);
+                        }
+                    cout << "\n\n" << flush;
+                    vec.clear();
+                    vec.shrink_to_fit();
                 }
-            else {
-                    cout << "girl" << endl;
+            else  {
+                    ++packetCount;
+                    vec.clear();
+                    vec.shrink_to_fit();
                 }
-            cout << "    coast: " << animal_coast << endl;
-            cout << "     left: " << dog_count << endl;
-            cout << "-------------------" << endl;
-        }
-    else {
-            cout << "cat's age: " << animal_age << endl;
-            cout << "      sex: " << animal_sex << endl;
-            cout << "    coast: " << animal_coast << endl;
-            cout << "     left: " << cat_count << endl;
-            cout << "-------------------" << endl;
         }
 }
-*/
 
-
-class Int
-{
-    unsigned int i;
-public:
-    Int() : i{0} {}
-    Int(uint arg) { i = arg; }
-    friend ostream& operator<<(ostream& os, const Int& obj);
-    Int& operator=(const Int& right) {
-            //проверка на самоприсваивание
-            if (this == &right) {
-                return *this;
-            }
-            i = right.i;
-            return *this;
-        }
-    const Int operator+(const Int& rv) {
-            return (i + rv.i);
-        }
-    /* перегрузкаа операторов для левого и правого операндов */
-    friend Int operator+(const Int& lv, const int& rv)
-    {
-        return lv.i + rv;
-    }
-    friend Int operator+(const int& lv, const Int& rv)
-    {
-        return lv + rv.i;
-    }
-
-};
-
-ostream& operator<<(ostream& os, const Int& obj)
-{
-    os << obj.i;
-    return os;
-}
-
-class AA
-{
-    int i;
-    int j;
-    static int count;
-public:
-    AA () : i{count++}, j{0} { cout << "c = " << count << endl;
-                         cout << "i = " << i << endl;
-                   }
-    AA (int arg) : i{count++}, j{arg} { cout << "c = " << count << endl;
-                                        cout << "i = " << i << endl;
-                                        cout << "j = " << j << endl;
-
-                   }
-    void show() const { cout << "c = " << count << endl;
-                        cout << "i = " << i << endl;
-                }
-    AA test();
-};
-
-AA AA::test()
-{
-    AA tmp(150);
-    return tmp;
-}
-
-int AA::count = 0;
-
-
-
-int main ()
-{
-      Srand();
-      boost::chrono::milliseconds start(clock());
-///----------------------------------------------------------------
-
-
-
-      Int a(1);
-      Int b = 4;
-      Int c = 2 + b;
-
-      cout << c << endl;
-
-     /* vector<AA> vec;
-
-      for (size_t i = 0; i < 10; ++i) {
-              vec.push_back(i);
-          }
-*/
-
-/*      my_boost_int_Rnd rnd;
-
-      vector<PetShop> dogs_base;
-
-      for (size_t i = 0; i < 10; ++i) {
-              dogs_base.push_back(PetShop(animal::dog, 1,
-                                          rnd.int_boost_rnd(0,1),
-                                          rnd.double_boost_rnd(500,600)));
-          }
-
-
-      auto iter = dogs_base.begin();
-
-      for (;iter != dogs_base.end(); ++iter) {
-              iter->show(animal::dog);
-          }
-
-
-
-      dogs_base.at(0).sell(animal::dog);
-      dogs_base.at(0).show(animal::dog);
-
-*/
-
-      /* vector<int> vec;
-      gen(vec, 100, 0, 100);
-      my_boost_int_Rnd rnd;
-      int elem = rnd.int_boost_rnd(0, 100);
-      int index = find_the_index(vec, elem);
-      auto iter = vec.begin();
-
-      for (size_t i = 0; iter != vec.end(); ++i, ++iter) {
-              cout << "index-" << i << " " << *iter << endl;
-          }
-
-      if (index == -1) {
-              cout << "there is no element:" << elem << endl;
-          }
-      else {
-              cout << "the index of " << elem << " is " << index << endl;
-          }
-*/
-///---------------------------------------------------------------
-
-      boost::chrono::milliseconds end(clock());
-      using ms = boost::chrono::milliseconds;
-      ms dur = boost::chrono::duration_cast<ms>(end - start);
-      double dd = dur.count();
-      cout << dd / 1000.0 << " sec. = " << end - start << endl;
-        return 0;
-}

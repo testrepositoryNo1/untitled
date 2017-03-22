@@ -8,7 +8,7 @@ CONFIG += -g
 CONFIG += qt thread debug
 
 LIBS += -L/path/boost/lib/ -lboost_thread -lboost_system -lboost_chrono -lboost_filesystem
-LIBS += -L/usr/lib/libcryptopp.a -lcryptopp
+LIBS += -L/usr/lib/libcryptopp.a -lcryptopp -lpcap
 
 #LIBS += -L /usr/include/python2.7/ -lpython2.7 #--- Python doesn't work ---#
 
