@@ -81,8 +81,36 @@ public:
              << ", Port: " << DestPort << ", "
              << "Useful data size: " << usefulDataSize << " bytes" << endl;
      }
+
+    void filter_by_addr_and_display(string _addr)
+    {
+        if (_addr == DestAddr) {
+                show();
+            }
+    }
+
+    void filter_by_addr_and_port_and_display(string _addr, string _port)
+    {
+        uint Port = stoi(_port);
+
+        if (_addr == DestAddr && Port == DestPort) {
+                show();
+            }
+    }
+
+
     friend bool Comparer(const Pcap_dump& a, const Pcap_dump& b);
 };
+
+
+Pcap_dump::Pcap_dump(pair<long, long> tmstp, Dest_Address dest_addr, uint DestP, uint uDataSz)
+{
+    timestamp = tmstp;
+    dest_addres = dest_addr;
+    DestAddr = dest_addr.getAddr();
+    DestPort = DestP;
+    usefulDataSize = uDataSz;
+}
 
 bool Comparer(const Pcap_dump& a, const Pcap_dump& b)
 {
@@ -95,27 +123,221 @@ bool Comparer(const Pcap_dump& a, const Pcap_dump& b)
              a.dest_addres._okt4() <= b.dest_addres._okt4());
 }
 
-Pcap_dump::Pcap_dump(pair<long, long> tmstp, Dest_Address dest_addr, uint DestP, uint uDataSz)
+
+void dispaly_results(string file)
 {
-    timestamp = tmstp;
-    dest_addres = dest_addr;
-    DestAddr = dest_addr.getAddr();
-    DestPort = DestP;
-    usefulDataSize = uDataSz;
+    char errbuff[PCAP_ERRBUF_SIZE]; // Create an char array to hold the error.
+    pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
+    struct pcap_pkthdr *header; //Create a header and a data object
+    const u_char *data;
+    string byte_port; /* binary performance */
+    string DestAddress;
+    uint DestPort = 0;
+    vector<int> vec;
+    vector<Pcap_dump> pcapvec;
+
+    //Loop through packets and print them to screen
+    while (pcap_next_ex(pcap, &header, &data) >= 0) {
+            for (u_int i = 0; i < header->caplen; ++i) {
+                    int dt = data[i];
+                    vec.push_back(dt);
+                }
+            int Protocol = vec.at(23); // this is the protocol byte
+            // for UDP Protocol must be 17
+            if (Protocol == 17) {
+                    Dest_Address addr(vec.at(30), vec.at(31), vec.at(32), vec.at(33));
+
+                    for(size_t i = 30; i <= 33; ++i) {
+                            DestAddress += to_string(vec.at(i)) + ".";
+                        }
+                    byte_port =  int_to_byte_string(vec.at(36));
+                    byte_port += int_to_byte_string(vec.at(37));
+                    DestPort = byte_string_to_int(byte_port);
+
+                    pcapvec.push_back(Pcap_dump(make_pair(header->ts.tv_sec, header->ts.tv_usec),
+                                     addr,
+                                     DestPort,
+                                     (header->len - 42)));
+                    // Show a warning if the length captured is different
+                    if (header->len != header->caplen) {
+                            cout << "Warning! Capture size different than packet size: "
+                                 << header->len << "bytes" << endl;
+                        };
+
+                    /*
+                     * use for debuging ***
+                     // loop through the packet and print it as hexidecimal representations  of octets
+                    // We also have a function that does this similarly below: PrintData()
+                    for (u_int i = 0; i < header->caplen; ++i) {
+                          // Start printing on the next after every 16 octets
+                          if ( (i % 16) == 0) {
+                                  cout << "\n";
+                              };
+                          int dt = data[i];
+                          cout << hex << dt << " ";
+                          //cout.unsetf (ios::hex);
+                      }
+                    cout << "\n\n" << flush;*/
+
+                    vec.clear();
+                    vec.shrink_to_fit();
+                }
+            else  {
+                    vec.clear();
+                    vec.shrink_to_fit();
+                }
+            DestAddress = "";
+        }
+
+    for (auto& elem : pcapvec)
+        elem.show();
 }
 
-bool ip_addr_checker(string str_ip)
-{
 
+void dispaly_results(string search_addr, string file)
+{
+    char errbuff[PCAP_ERRBUF_SIZE]; // Create an char array to hold the error.
+    pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
+    struct pcap_pkthdr *header; //Create a header and a data object
+    const u_char *data;
+    string byte_port; /* binary performance */
+    string DestAddress;
+    uint DestPort = 0;
+    vector<int> vec;
+    vector<Pcap_dump> pcapvec;
+
+    //Loop through packets and print them to screen
+    while (pcap_next_ex(pcap, &header, &data) >= 0) {
+            for (u_int i = 0; i < header->caplen; ++i) {
+                    int dt = data[i];
+                    vec.push_back(dt);
+                }
+            int Protocol = vec.at(23); // this is the protocol byte
+            // for UDP Protocol must be 17
+            if (Protocol == 17) {
+                    Dest_Address addr(vec.at(30), vec.at(31), vec.at(32), vec.at(33));
+
+                    for(size_t i = 30; i <= 33; ++i) {
+                            DestAddress += to_string(vec.at(i)) + ".";
+                        }
+                    byte_port =  int_to_byte_string(vec.at(36));
+                    byte_port += int_to_byte_string(vec.at(37));
+                    DestPort = byte_string_to_int(byte_port);
+
+                    pcapvec.push_back(Pcap_dump(make_pair(header->ts.tv_sec, header->ts.tv_usec),
+                                     addr,
+                                     DestPort,
+                                     (header->len - 42)));
+                    // Show a warning if the length captured is different
+                    if (header->len != header->caplen) {
+                            cout << "Warning! Capture size different than packet size: "
+                                 << header->len << "bytes" << endl;
+                        };
+
+                    /*
+                     * use for debuging ***
+                     // loop through the packet and print it as hexidecimal representations  of octets
+                    // We also have a function that does this similarly below: PrintData()
+                    for (u_int i = 0; i < header->caplen; ++i) {
+                          // Start printing on the next after every 16 octets
+                          if ( (i % 16) == 0) {
+                                  cout << "\n";
+                              };
+                          int dt = data[i];
+                          cout << hex << dt << " ";
+                          //cout.unsetf (ios::hex);
+                      }
+                    cout << "\n\n" << flush;*/
+
+                    vec.clear();
+                    vec.shrink_to_fit();
+                }
+            else  {
+                    vec.clear();
+                    vec.shrink_to_fit();
+                }
+            DestAddress = "";
+        }
+
+    for (Pcap_dump elem : pcapvec) {
+            elem.filter_by_addr_and_display(search_addr);
+        }
 }
 
+void dispaly_results(string search_addr, string port, string file)
+{
+    char errbuff[PCAP_ERRBUF_SIZE]; // Create an char array to hold the error.
+    pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
+    struct pcap_pkthdr *header; //Create a header and a data object
+    const u_char *data;
+    string byte_port; /* binary performance */
+    string DestAddress;
+    uint DestPort = 0;
+    vector<int> vec;
+    vector<Pcap_dump> pcapvec;
 
+    //Loop through packets and print them to screen
+    while (pcap_next_ex(pcap, &header, &data) >= 0) {
+            for (u_int i = 0; i < header->caplen; ++i) {
+                    int dt = data[i];
+                    vec.push_back(dt);
+                }
+            int Protocol = vec.at(23); // this is the protocol byte
+            // for UDP Protocol must be 17
+            if (Protocol == 17) {
+                    Dest_Address addr(vec.at(30), vec.at(31), vec.at(32), vec.at(33));
 
+                    for(size_t i = 30; i <= 33; ++i) {
+                            DestAddress += to_string(vec.at(i)) + ".";
+                        }
+                    byte_port =  int_to_byte_string(vec.at(36));
+                    byte_port += int_to_byte_string(vec.at(37));
+                    DestPort = byte_string_to_int(byte_port);
+
+                    pcapvec.push_back(Pcap_dump(make_pair(header->ts.tv_sec, header->ts.tv_usec),
+                                     addr,
+                                     DestPort,
+                                     (header->len - 42)));
+                    // Show a warning if the length captured is different
+                    if (header->len != header->caplen) {
+                            cout << "Warning! Capture size different than packet size: "
+                                 << header->len << "bytes" << endl;
+                        };
+
+                    /*
+                     * use for debuging ***
+                     // loop through the packet and print it as hexidecimal representations  of octets
+                    // We also have a function that does this similarly below: PrintData()
+                    for (u_int i = 0; i < header->caplen; ++i) {
+                          // Start printing on the next after every 16 octets
+                          if ( (i % 16) == 0) {
+                                  cout << "\n";
+                              };
+                          int dt = data[i];
+                          cout << hex << dt << " ";
+                          //cout.unsetf (ios::hex);
+                      }
+                    cout << "\n\n" << flush;*/
+
+                    vec.clear();
+                    vec.shrink_to_fit();
+                }
+            else  {
+                    vec.clear();
+                    vec.shrink_to_fit();
+                }
+            DestAddress = "";
+        }
+
+    for (Pcap_dump elem : pcapvec) {
+            elem.filter_by_addr_and_port_and_display(search_addr, port);
+        }
+}
 
 int main(int argc, char* argv[])
 {
     string search_addr = "0.0.0.0";
-    string file = "data2.pcap";
+    string file = "";
     string port_ = "0";
 
     if (argc == 1) {
@@ -126,11 +348,13 @@ int main(int argc, char* argv[])
         }
     if (argc == 2) {
         file = file = static_cast<string>(argv[1]);
+        dispaly_results(file);
     }
     else if (argc == 4) {
         if ((argv[1])[1] == 'a') {
                 search_addr = static_cast<string>(argv[2]);
                 file = static_cast<string>(argv[3]);
+                dispaly_results(search_addr, file);
             }
         }
     else if (argc == 6) {
@@ -138,6 +362,7 @@ int main(int argc, char* argv[])
                     search_addr = static_cast<string>(argv[2]);
                     port_ = static_cast<string>(argv[4]);
                     file = static_cast<string>(argv[5]);
+                    dispaly_results(search_addr, port_, file);
                 }
         }
     else {
@@ -148,79 +373,13 @@ int main(int argc, char* argv[])
         }
 
 
-    cout << argc << endl;
+/*    cout << argc << endl;
     cout << search_addr << endl;
     cout << file << endl;
     cout << port_ << endl;
+*/
 
 
-      //string file = "data2.pcap";
-      char errbuff[PCAP_ERRBUF_SIZE]; // Create an char array to hold the error.
-      pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
-      struct pcap_pkthdr *header; //Create a header and a data object
-      const u_char *data;
-      string byte_port; /* binary performance */
-      string DestAddress;
-      uint DestPort = 0;
-      vector<int> vec;
-      vector<Pcap_dump> pcapvec;
-      //DestAddress addr;
-
-      //Loop through packets and print them to screen
-      while (pcap_next_ex(pcap, &header, &data) >= 0) {
-              for (u_int i = 0; i < header->caplen; ++i) {
-                      int dt = data[i];
-                      vec.push_back(dt);
-                  }
-              int Protocol = vec.at(23); // this is the protocol byte
-              // for UDP Protocol must be 17
-              if (Protocol == 17) {
-                      Dest_Address addr(vec.at(30), vec.at(31), vec.at(32), vec.at(33));
-
-                      for(size_t i = 30; i <= 33; ++i) {
-                              DestAddress += to_string(vec.at(i)) + ".";
-                          }
-                      byte_port =  int_to_byte_string(vec.at(36));
-                      byte_port += int_to_byte_string(vec.at(37));
-                      DestPort = byte_string_to_int(byte_port);
-
-                      pcapvec.push_back(Pcap_dump(make_pair(header->ts.tv_sec, header->ts.tv_usec),
-                                       addr,
-                                       DestPort,
-                                       (header->len - 42)));
-                      // Show a warning if the length captured is different
-                      if (header->len != header->caplen) {
-                              cout << "Warning! Capture size different than packet size: "
-                                   << header->len << "bytes" << endl;
-                          };
-
-                      /*
-                       * use for debuging ***
-                       // loop through the packet and print it as hexidecimal representations  of octets
-                      // We also have a function that does this similarly below: PrintData()
-                      for (u_int i = 0; i < header->caplen; ++i) {
-                            // Start printing on the next after every 16 octets
-                            if ( (i % 16) == 0) {
-                                    cout << "\n";
-                                };
-                            int dt = data[i];
-                            cout << hex << dt << " ";
-                            //cout.unsetf (ios::hex);
-                        }
-                      cout << "\n\n" << flush;*/
-
-                      vec.clear();
-                      vec.shrink_to_fit();
-                  }
-              else  {
-                      vec.clear();
-                      vec.shrink_to_fit();
-                  }
-              DestAddress = "";
-          }
-
-      /*for (auto& elem : pcapvec)
-          elem.show();*/
 
       return 0;
 }
