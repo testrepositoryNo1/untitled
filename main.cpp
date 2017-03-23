@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <iostream>
 #include <pcap.h>
@@ -7,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cmath>
 
 #include <netinet/in.h>
 #include <netinet/ip.h>
@@ -14,7 +14,6 @@
 #include <netinet/if_ether.h>
 #include <bitset>
 #include <cstdlib>
-#include "stdfx.h"
 
 
 using namespace std;
@@ -70,6 +69,7 @@ class Pcap_dump
     uint DestPort;
     uint usefulDataSize;
     string cmp_str(string a, string b);
+    static size_t count;
 public:
     Pcap_dump() : timestamp{make_pair(0,0)}, DestAddr{"0.0.0.0"},
                   DestPort{0}, usefulDataSize{0} {}
@@ -86,22 +86,30 @@ public:
     {
         if (_addr == DestAddr) {
                 show();
+                ++count;
             }
+        //if (count < 1) cout << "No result by current request!" << endl;
     }
 
     void filter_by_addr_and_port_and_display(string _addr, string _port)
     {
         uint Port = stoi(_port);
-
         if (_addr == DestAddr && Port == DestPort) {
                 show();
+                ++count;
             }
     }
 
+    bool display_no_results_message()
+    {
+        if (count >= 1) return true;
+        else return false;
+    }
 
     friend bool Comparer(const Pcap_dump& a, const Pcap_dump& b);
 };
 
+size_t Pcap_dump::count = 0;
 
 Pcap_dump::Pcap_dump(pair<long, long> tmstp, Dest_Address dest_addr, uint DestP, uint uDataSz)
 {
@@ -112,6 +120,7 @@ Pcap_dump::Pcap_dump(pair<long, long> tmstp, Dest_Address dest_addr, uint DestP,
     usefulDataSize = uDataSz;
 }
 
+/*
 bool Comparer(const Pcap_dump& a, const Pcap_dump& b)
 {
     return ( a.dest_addres._okt1() <= b.dest_addres._okt1() ||
@@ -122,7 +131,7 @@ bool Comparer(const Pcap_dump& a, const Pcap_dump& b)
              a.dest_addres._okt3() == b.dest_addres._okt3() &&
              a.dest_addres._okt4() <= b.dest_addres._okt4());
 }
-
+*/
 
 void dispaly_results(string file)
 {
@@ -262,6 +271,9 @@ void dispaly_results(string search_addr, string file)
     for (Pcap_dump elem : pcapvec) {
             elem.filter_by_addr_and_display(search_addr);
         }
+    bool b = pcapvec.begin()->display_no_results_message();
+    if (!b) cout << "No result by current request!" << endl;
+
 }
 
 void dispaly_results(string search_addr, string port, string file)
@@ -332,6 +344,8 @@ void dispaly_results(string search_addr, string port, string file)
     for (Pcap_dump elem : pcapvec) {
             elem.filter_by_addr_and_port_and_display(search_addr, port);
         }
+    bool b = pcapvec.begin()->display_no_results_message();
+    if (!b) cout << "No result by current request!" << endl;
 }
 
 int main(int argc, char* argv[])
