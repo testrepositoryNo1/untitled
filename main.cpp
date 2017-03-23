@@ -74,6 +74,7 @@ public:
     Pcap_dump() : timestamp{make_pair(0,0)}, DestAddr{"0.0.0.0"},
                   DestPort{0}, usefulDataSize{0} {}
     Pcap_dump(pair<long, long> tmstp, Dest_Address dest_addr, uint DestP, uint uDataSz);
+
     void show()
     {
         cout << "TimeStamp: " << timestamp.first << "." << timestamp.second << ", "
@@ -88,7 +89,6 @@ public:
                 show();
                 ++count;
             }
-        //if (count < 1) cout << "No result by current request!" << endl;
     }
 
     void filter_by_addr_and_port_and_display(string _addr, string _port)
@@ -100,7 +100,7 @@ public:
             }
     }
 
-    bool display_no_results_message()
+    bool display_no_results_signal()
     {
         if (count >= 1) return true;
         else return false;
@@ -139,7 +139,7 @@ void dispaly_results(string file)
     pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
     struct pcap_pkthdr *header; //Create a header and a data object
     const u_char *data;
-    string byte_port; /* binary performance */
+    string byte_port; /* for binary performance */
     string DestAddress;
     uint DestPort = 0;
     vector<int> vec;
@@ -209,7 +209,7 @@ void dispaly_results(string search_addr, string file)
     pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
     struct pcap_pkthdr *header; //Create a header and a data object
     const u_char *data;
-    string byte_port; /* binary performance */
+    string byte_port; /* for binary performance */
     string DestAddress;
     uint DestPort = 0;
     vector<int> vec;
@@ -242,22 +242,6 @@ void dispaly_results(string search_addr, string file)
                             cout << "Warning! Capture size different than packet size: "
                                  << header->len << "bytes" << endl;
                         };
-
-                    /*
-                     * use for debuging ***
-                     // loop through the packet and print it as hexidecimal representations  of octets
-                    // We also have a function that does this similarly below: PrintData()
-                    for (u_int i = 0; i < header->caplen; ++i) {
-                          // Start printing on the next after every 16 octets
-                          if ( (i % 16) == 0) {
-                                  cout << "\n";
-                              };
-                          int dt = data[i];
-                          cout << hex << dt << " ";
-                          //cout.unsetf (ios::hex);
-                      }
-                    cout << "\n\n" << flush;*/
-
                     vec.clear();
                     vec.shrink_to_fit();
                 }
@@ -271,9 +255,8 @@ void dispaly_results(string search_addr, string file)
     for (Pcap_dump elem : pcapvec) {
             elem.filter_by_addr_and_display(search_addr);
         }
-    bool b = pcapvec.begin()->display_no_results_message();
+    bool b = pcapvec.begin()->display_no_results_signal();
     if (!b) cout << "No result by current request!" << endl;
-
 }
 
 void dispaly_results(string search_addr, string port, string file)
@@ -282,7 +265,7 @@ void dispaly_results(string search_addr, string port, string file)
     pcap_t * pcap = pcap_open_offline(file.c_str(), errbuff); //Open the file and store result in pointer to pcap_t
     struct pcap_pkthdr *header; //Create a header and a data object
     const u_char *data;
-    string byte_port; /* binary performance */
+    string byte_port; /* for binary performance */
     string DestAddress;
     uint DestPort = 0;
     vector<int> vec;
@@ -315,22 +298,6 @@ void dispaly_results(string search_addr, string port, string file)
                             cout << "Warning! Capture size different than packet size: "
                                  << header->len << "bytes" << endl;
                         };
-
-                    /*
-                     * use for debuging ***
-                     // loop through the packet and print it as hexidecimal representations  of octets
-                    // We also have a function that does this similarly below: PrintData()
-                    for (u_int i = 0; i < header->caplen; ++i) {
-                          // Start printing on the next after every 16 octets
-                          if ( (i % 16) == 0) {
-                                  cout << "\n";
-                              };
-                          int dt = data[i];
-                          cout << hex << dt << " ";
-                          //cout.unsetf (ios::hex);
-                      }
-                    cout << "\n\n" << flush;*/
-
                     vec.clear();
                     vec.shrink_to_fit();
                 }
@@ -344,7 +311,7 @@ void dispaly_results(string search_addr, string port, string file)
     for (Pcap_dump elem : pcapvec) {
             elem.filter_by_addr_and_port_and_display(search_addr, port);
         }
-    bool b = pcapvec.begin()->display_no_results_message();
+    bool b = pcapvec.begin()->display_no_results_signal();
     if (!b) cout << "No result by current request!" << endl;
 }
 
@@ -361,15 +328,15 @@ int main(int argc, char* argv[])
             exit(0);
         }
     if (argc == 2) {
-        file = file = static_cast<string>(argv[1]);
-        dispaly_results(file);
-    }
+            file = file = static_cast<string>(argv[1]);
+            dispaly_results(file);
+        }
     else if (argc == 4) {
-        if ((argv[1])[1] == 'a') {
-                search_addr = static_cast<string>(argv[2]);
-                file = static_cast<string>(argv[3]);
-                dispaly_results(search_addr, file);
-            }
+            if ((argv[1])[1] == 'a') {
+                    search_addr = static_cast<string>(argv[2]);
+                    file = static_cast<string>(argv[3]);
+                    dispaly_results(search_addr, file);
+                }
         }
     else if (argc == 6) {
             if ((argv[3])[1] == 'p') {
@@ -385,15 +352,5 @@ int main(int argc, char* argv[])
             cout << " -p        Port filter ./print_pcap -a 192.168.1.22 -p 9991 file.pcap" << endl;
             return 0;
         }
-
-
-/*    cout << argc << endl;
-    cout << search_addr << endl;
-    cout << file << endl;
-    cout << port_ << endl;
-*/
-
-
-
-      return 0;
+    return 0;
 }
